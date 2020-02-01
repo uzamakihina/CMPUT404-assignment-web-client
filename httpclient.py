@@ -22,7 +22,7 @@ import sys
 import socket
 import re
 # you may use urllib to encode data appropriately
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urlencode
 import time 
 
 
@@ -41,18 +41,15 @@ class HTTPClient(object):
 
     def connect(self, host, port):
         
-        
-        addr = (host,port)
-        
-        
+        addr = (host,port) 
+        print(addr)
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.connect(addr)
         
+
+        return
         
-<<<<<<< HEAD
         
-=======
->>>>>>> 8ab60cfc27524693e06fb999c99c2f24f43cd283
 
     def get_code(self, data):
         return None
@@ -64,7 +61,23 @@ class HTTPClient(object):
 
 
     def get_body(self, data):
-        return None
+        
+        lines = data.splitlines()
+
+        start = 0
+        while start < len(lines):
+            if lines[start] != '':
+                start += 1
+            else:
+                break
+
+        return_string = ""
+
+        for i in range(start+1,len(lines)):
+            
+            return_string += (lines[i] + '\n')
+
+        return return_string
     
     def sendall(self, data):
         self.socket.sendall(data.encode('utf-8'))
@@ -76,99 +89,70 @@ class HTTPClient(object):
     def recvall(self, sock):
         buffer = bytearray()
         done = False
-        
-        
         while not done:
-
-           
-            
             part = sock.recv(1024)
-            
-            
-<<<<<<< HEAD
-    
-=======
-            
-
->>>>>>> 8ab60cfc27524693e06fb999c99c2f24f43cd283
             if (part):
                 buffer.extend(part)
-   
             else:
                 done = not part
-
-<<<<<<< HEAD
-            
-
-
-            
-
-=======
-        
->>>>>>> 8ab60cfc27524693e06fb999c99c2f24f43cd283
         return buffer.decode('utf-8')
 
     def GET(self, url, args=None):
 
-
-        self.connect(url, 80)
-        
-        body = "GET / HTTP/1.1\r\n"
-        body += "Host: "+url+"\r\n"
-<<<<<<< HEAD
-        body += "Accept */*\r\n\r\n"
-
         data = urlparse(url)
-
+        port = data.port
+        if port == None:
+            port = 80
+        path = data.path
+        host = data.hostname
         
-        self.connect(data.hostname,data.port)
+        self.connect(host, port)
 
 
-=======
-        body += "Connection: close\r\n"
-        body += "Accept-Ranges: bytes\r\n"
-        body += "Accept: */*\r\n\r\n"
->>>>>>> 8ab60cfc27524693e06fb999c99c2f24f43cd283
+        body = 'GET /'+path+ ' HTTP/1.1\r\n'
+        body += 'Host: '+host+'\r\n'
+        body += 'Accept: */*\r\n'
+        body += 'User-Agent: curl/7.54.0\r\n'
+        body += 'Connection: close\r\n\r\n'
         
-        
-        # self.sendall(body)
-
-<<<<<<< HEAD
-        # return HTTPResponse(code, body)
-=======
-        
-
-        #return HTTPResponse(code, body)
->>>>>>> 8ab60cfc27524693e06fb999c99c2f24f43cd283
+        self.sendall(body)
+        rply = self.recvall(self.socket)
+        rply_body = self.get_body(rply)
+        code = int(rply.split()[1])
+        self.close()
+        return HTTPResponse(code, rply_body)
 
     def POST(self, url, args=None):
 
-        self.connect(url, 80)
-        
-        code = 500
-        body = "POST / HTTP/1.1\r\n"
-        body += "Host: "+url+"\r\n"
-        body += "Connection: close\r\n"
-        body += "Accept-Ranges: bytes\r\n"
+        data = urlparse(url)
+        port = data.port
+        if port == None:
+            port = 80
+        path = data.path
+        host = data.hostname
+        self.connect(host, port)
+        body = "POST /"+path+ " HTTP/1.1\r\n"
+        body += "Host: "+host+"\r\n"
         body += "Accept: */*\r\n"
-
-
-
         body += "Content-Type: application/x-www-form-urlencoded\r\n"
-        body += "Content-Length: 0\r\n\r\n"
+        body += "Connection: close\r\n"
+
+        if args == None:
+            body += "Content-Length: 0\r\n\r\n"
+        else:
+            body += "Content-Length: "+str(len(urlencode(args)))+"\r\n\r\n"
+            body += urlencode(args)
+        
+
+
 
         
         self.sendall(body)
+        rply = self.recvall(self.socket)
+        rply_body = self.get_body(rply)
+        code = int(rply.split()[1])
 
-        data = self.recvall(self.socket)
-
-        
-
-
-
-
-
-        return HTTPResponse(code, body)
+        return HTTPResponse(code, rply_body)
 
     def command(self, url, command="GET", args=None):
        
@@ -178,25 +162,17 @@ class HTTPClient(object):
             return self.POST( url, args )
         else:
             
-<<<<<<< HEAD
-            return self.GET(url,args)
-            # data = urlparse(url)
-            # self.connect(url, 80)
-            # self.GET( url, args )
-=======
             
             
             self.GET( url, args )
             
-            reply = self.recvall(self.socket)
             
-            print(str(reply))
-
->>>>>>> 8ab60cfc27524693e06fb999c99c2f24f43cd283
+            
+            
 
             # reply = self.recvall(self.socket)
 
-            # print(reply)
+
             
            
 
@@ -209,15 +185,8 @@ if __name__ == "__main__":
     if (len(sys.argv) <= 1):
         help()
         sys.exit(1)
-    else:
+    elif (len(sys.argv) == 3):
         print(sys.argv)
         print(client.command( sys.argv[2], sys.argv[1] ))
-
-        
-        
-
-    # elif (len(sys.argv) == 3):
-    #     print(sys.argv)
-    #     print(client.command( sys.argv[2], sys.argv[1] ))
-    # else:
-    #     print(client.command( sys.argv[1] ))
+    else:
+        print(client.command( sys.argv[1] ))
