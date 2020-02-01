@@ -155,6 +155,7 @@ class MyHTTPHandler(http.server.BaseHTTPRequestHandler):
 
 
 
+<<<<<<< HEAD
 #     def test404GET(self):
 #         '''Test against 404 errors'''
 #         MyHTTPHandler.get = nothing_available
@@ -162,6 +163,17 @@ class MyHTTPHandler(http.server.BaseHTTPRequestHandler):
 #         req = http.GET("http://%s:%d/49872398432" % (BASEHOST,BASEPORT) )
 #         self.assertTrue(req != None, "None Returned!")
 #         self.assertTrue(req.code == 404)
+=======
+    def test404GET(self):
+        '''Test against 404 errors'''
+        MyHTTPHandler.get = nothing_available
+        http = httpclass.HTTPClient()
+
+        
+        req = http.GET("http://%s:%d/49872398432" % (BASEHOST,BASEPORT) )
+        self.assertTrue(req != None, "None Returned!")
+        self.assertTrue(req.code == 404)
+>>>>>>> 8ab60cfc27524693e06fb999c99c2f24f43cd283
 
 #     def test404POST(self):
 #         '''Test against 404 errors'''
@@ -200,6 +212,10 @@ class MyHTTPHandler(http.server.BaseHTTPRequestHandler):
 #         http = httpclass.HTTPClient()
 #         path = "abcdef/gjkd/dsadas"
 #         url = "http://%s:%d/%s" % (BASEHOST,BASEPORT, path)
+<<<<<<< HEAD
+=======
+#         print('####################3', url)
+>>>>>>> 8ab60cfc27524693e06fb999c99c2f24f43cd283
 #         req = http.POST( url )
 #         self.assertTrue(req != None, "None Returned!")
 #         self.assertTrue(req.code == 200,"Code is %s but I wanted a 200 OK" % req.code)
@@ -207,6 +223,7 @@ class MyHTTPHandler(http.server.BaseHTTPRequestHandler):
         
         
 #     # consider disabling this test until everything else works
+<<<<<<< HEAD
 #     def testInternetGets(self):
 #         '''Test HTTP Get in the wild, these webservers are far less
 #            forgiving'''
@@ -233,6 +250,34 @@ class MyHTTPHandler(http.server.BaseHTTPRequestHandler):
 #                 self.assertTrue(req.body.find("DOCTYPE")>=0 or 
 #                                 req.body.find("<body")>=0 , 
 #                                 "%s Data: [%s] " % (url,req.body))
+=======
+#     # def testInternetGets(self):
+#     #     '''Test HTTP Get in the wild, these webservers are far less
+#     #        forgiving'''
+#     #     MyHTTPHandler.get = echo_path_get
+#     #     http = httpclass.HTTPClient()        
+#     #     urls = [
+#     #         "http://www.cs.ualberta.ca/",
+#     #         "http://softwareprocess.es/static/SoftwareProcess.es.html",
+#     #         "http://c2.com/cgi/wiki?CommonLispHyperSpec",
+#     #         "http://slashdot.org"
+#     #         ]
+#     #     for url in urls:
+#     #         try:
+#     #             req = http.GET( url )
+#     #         except Exception as e:
+#     #             print("An Exception was thrown for %s" % url)
+#     #             self.assertTrue( False, "An Exception was thrown for %s %s" % (url,e))
+#     #         self.assertTrue(req != None, "None Returned! %s" % url)
+#     #         self.assertTrue(req.code == 200 or 
+#     #                         req.code == 301 or
+#     #                         req.code == 302,
+#     #                         "Code: %s for %s" % (req.code, url))
+#     #         if (req.code == 200):
+#     #             self.assertTrue(req.body.find("DOCTYPE")>=0 or 
+#     #                             req.body.find("<body")>=0 , 
+#     #                             "%s Data: [%s] " % (url,req.body))
+>>>>>>> 8ab60cfc27524693e06fb999c99c2f24f43cd283
     
 #     def testPOST(self):
 #         '''Test HTTP POST with an echo server'''

@@ -44,11 +44,15 @@ class HTTPClient(object):
         
         addr = (host,port)
         
+        
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.connect(addr)
         
         
+<<<<<<< HEAD
         
+=======
+>>>>>>> 8ab60cfc27524693e06fb999c99c2f24f43cd283
 
     def get_code(self, data):
         return None
@@ -81,24 +85,37 @@ class HTTPClient(object):
             part = sock.recv(1024)
             
             
+<<<<<<< HEAD
     
+=======
+            
+
+>>>>>>> 8ab60cfc27524693e06fb999c99c2f24f43cd283
             if (part):
                 buffer.extend(part)
    
             else:
                 done = not part
 
+<<<<<<< HEAD
             
 
 
             
 
+=======
+        
+>>>>>>> 8ab60cfc27524693e06fb999c99c2f24f43cd283
         return buffer.decode('utf-8')
 
     def GET(self, url, args=None):
-        code = 500
+
+
+        self.connect(url, 80)
+        
         body = "GET / HTTP/1.1\r\n"
         body += "Host: "+url+"\r\n"
+<<<<<<< HEAD
         body += "Accept */*\r\n\r\n"
 
         data = urlparse(url)
@@ -107,31 +124,75 @@ class HTTPClient(object):
         self.connect(data.hostname,data.port)
 
 
+=======
+        body += "Connection: close\r\n"
+        body += "Accept-Ranges: bytes\r\n"
+        body += "Accept: */*\r\n\r\n"
+>>>>>>> 8ab60cfc27524693e06fb999c99c2f24f43cd283
         
         
         # self.sendall(body)
 
+<<<<<<< HEAD
         # return HTTPResponse(code, body)
+=======
+        
+
+        #return HTTPResponse(code, body)
+>>>>>>> 8ab60cfc27524693e06fb999c99c2f24f43cd283
 
     def POST(self, url, args=None):
+
+        self.connect(url, 80)
+        
         code = 500
-        body = ""
+        body = "POST / HTTP/1.1\r\n"
+        body += "Host: "+url+"\r\n"
+        body += "Connection: close\r\n"
+        body += "Accept-Ranges: bytes\r\n"
+        body += "Accept: */*\r\n"
+
+
+
+        body += "Content-Type: application/x-www-form-urlencoded\r\n"
+        body += "Content-Length: 0\r\n\r\n"
+
+        
+        self.sendall(body)
+
+        data = self.recvall(self.socket)
+
+        
+
+
+
+
+
         return HTTPResponse(code, body)
 
     def command(self, url, command="GET", args=None):
+       
         
         if (command == "POST"):
 
-
             return self.POST( url, args )
-
-
         else:
             
+<<<<<<< HEAD
             return self.GET(url,args)
             # data = urlparse(url)
             # self.connect(url, 80)
             # self.GET( url, args )
+=======
+            
+            
+            self.GET( url, args )
+            
+            reply = self.recvall(self.socket)
+            
+            print(str(reply))
+
+>>>>>>> 8ab60cfc27524693e06fb999c99c2f24f43cd283
 
             # reply = self.recvall(self.socket)
 
@@ -148,12 +209,15 @@ if __name__ == "__main__":
     if (len(sys.argv) <= 1):
         help()
         sys.exit(1)
-
-        
-        
-
-    elif (len(sys.argv) == 3):
+    else:
         print(sys.argv)
         print(client.command( sys.argv[2], sys.argv[1] ))
-    else:
-        print(client.command( sys.argv[1] ))
+
+        
+        
+
+    # elif (len(sys.argv) == 3):
+    #     print(sys.argv)
+    #     print(client.command( sys.argv[2], sys.argv[1] ))
+    # else:
+    #     print(client.command( sys.argv[1] ))
