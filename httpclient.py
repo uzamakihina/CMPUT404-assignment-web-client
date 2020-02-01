@@ -22,7 +22,9 @@ import sys
 import socket
 import re
 # you may use urllib to encode data appropriately
-import urllib.parse
+from urllib.parse import urlparse
+import time 
+
 
 
 
@@ -45,12 +47,17 @@ class HTTPClient(object):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.connect(addr)
         
+        
+        
 
     def get_code(self, data):
         return None
 
     def get_headers(self,data):
-        return None
+        
+        print(data.decode('utf-8').split('\r\n'))
+
+
 
     def get_body(self, data):
         return None
@@ -66,32 +73,45 @@ class HTTPClient(object):
         buffer = bytearray()
         done = False
         
-
-
+        
         while not done:
+
+           
             
             part = sock.recv(1024)
             
             
-
+    
             if (part):
                 buffer.extend(part)
-
-                
+   
             else:
-                
                 done = not part
+
+            
+
+
+            
+
         return buffer.decode('utf-8')
 
     def GET(self, url, args=None):
         code = 500
         body = "GET / HTTP/1.1\r\n"
-        body += "Host: "+url+"\r\n\r\n"
-        
-        
-        self.sendall(body)
+        body += "Host: "+url+"\r\n"
+        body += "Accept */*\r\n\r\n"
 
-        return HTTPResponse(code, body)
+        data = urlparse(url)
+
+        
+        self.connect(data.hostname,data.port)
+
+
+        
+        
+        # self.sendall(body)
+
+        # return HTTPResponse(code, body)
 
     def POST(self, url, args=None):
         code = 500
@@ -108,16 +128,16 @@ class HTTPClient(object):
 
         else:
             
-            self.connect(url, 80)
-            
-            self.GET( url, args )
-            
-            reply = self.recvall(self.socket)
-            
-            print(str(reply))
+            return self.GET(url,args)
+            # data = urlparse(url)
+            # self.connect(url, 80)
+            # self.GET( url, args )
 
+            # reply = self.recvall(self.socket)
 
-
+            # print(reply)
+            
+           
 
     
 if __name__ == "__main__":
