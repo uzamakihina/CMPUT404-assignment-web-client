@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # coding: utf-8
-# Copyright 2016 Abram Hindle, https://github.com/tywtyw2002, and https://github.com/treedust
+# Copyright 2016 Abram Hindle, https://github.com/tywtyw2002, and https://github.com/treedust and Joe Xu
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ class HTTPClient(object):
     def connect(self, host, port):
         
         addr = (host,port) 
-        print(addr)
+        
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.connect(addr)
         
@@ -95,11 +95,13 @@ class HTTPClient(object):
                 buffer.extend(part)
             else:
                 done = not part
+        
         return buffer.decode('utf-8')
 
     def GET(self, url, args=None):
 
         data = urlparse(url)
+        
         port = data.port
         if port == None:
             port = 80
@@ -120,6 +122,9 @@ class HTTPClient(object):
         rply_body = self.get_body(rply)
         code = int(rply.split()[1])
         self.close()
+
+        print(rply_body)
+
         return HTTPResponse(code, rply_body)
 
     def POST(self, url, args=None):
@@ -151,7 +156,8 @@ class HTTPClient(object):
         rply = self.recvall(self.socket)
         rply_body = self.get_body(rply)
         code = int(rply.split()[1])
-
+        
+        print(rply_body)
         return HTTPResponse(code, rply_body)
 
     def command(self, url, command="GET", args=None):
@@ -170,7 +176,7 @@ class HTTPClient(object):
             
             
 
-            # reply = self.recvall(self.socket)
+       
 
 
             
@@ -186,7 +192,7 @@ if __name__ == "__main__":
         help()
         sys.exit(1)
     elif (len(sys.argv) == 3):
-        print(sys.argv)
-        print(client.command( sys.argv[2], sys.argv[1] ))
+        
+        client.command( sys.argv[2], sys.argv[1] )
     else:
-        print(client.command( sys.argv[1] ))
+        client.command( sys.argv[1] )
